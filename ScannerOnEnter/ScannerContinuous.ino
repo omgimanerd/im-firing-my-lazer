@@ -11,9 +11,5 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    if (Serial.read() == ENTER_KEY) {
-      Serial.println(analogRead(A0));
-    }
-  }
+  Serial.println(analogRead(A0));
 }

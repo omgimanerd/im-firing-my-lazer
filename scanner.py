@@ -2,7 +2,7 @@
 
 import serial
 
-class LaserScanner():
+class Scanner():
     
     LOCATION = "/dev/cu/usbmodem1411"
     BAUDRATE = 9600
@@ -12,13 +12,13 @@ class LaserScanner():
 
     @staticmethod
     def create():
-        return LaserScanner(serial.Serial(LOCATION, BAUDRATE))
+        return Scanner(serial.Serial(LOCATION, BAUDRATE))
 
     def read(self):
         return self.serial.readline()
 
     
 if __name__ == "__main__":
-    scanner = LaserScanner.create()
+    scanner = Scanner.create()
     while True:
         scanner.read()

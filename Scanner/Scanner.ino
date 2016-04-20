@@ -31,5 +31,5 @@ void loop() {
   
   Serial.println(valueSum / 10.0);
   x_motor.step(5);
-  y_motor.step(10);
+  y_motor.step(5);
 }

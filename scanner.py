@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from lib.color import Color
-from lib.drawing import Drawing
+from graphics.lib.color import Color
+from graphics.lib.drawing import Drawing
 
 import math
 import serial
@@ -40,8 +40,10 @@ if __name__ == "__main__":
             scanner.read()
     except KeyboardInterrupt:
         data = scanner.get_data()
+        print "Generating image..."
 
-    drawing = Drawing(len(data), int(max(data) + 0.5) * 2)
+    drawing = Drawing(len(data), int(max(data) * 1.5))
     for i, point in enumerate(data):
         drawing._set_pixel(int(point), i, Color("#000000"))
-    drawing.generate("data/%s" % int(time.time()), extension="png")
+    drawing.generate("data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S"),
+                     extension="png")

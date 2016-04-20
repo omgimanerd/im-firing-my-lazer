@@ -32,6 +32,10 @@ class Scanner():
         return self.data
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print "Usage: python scanner.py <serial location>"
+        print "Example: python scanner.py /dev/ttyACM0"
+        sys.exit(0)
     print "Reading from %s" % sys.argv[1]
     scanner = Scanner.create(sys.argv[1])
     data = None
@@ -42,8 +46,10 @@ if __name__ == "__main__":
         data = scanner.get_data()
         print "Generating image..."
 
-    drawing = Drawing(len(data), int(max(data) * 1.5))
+    width = len(data)
+    height = int(max(data) * 1.5)
+    drawing = Drawing(width, height)
     for i, point in enumerate(data):
-        drawing._set_pixel(int(point), i, Color("#000000"))
+        drawing._set_pixel(height - int(point) + 1, i, Color("#000000"))
     drawing.generate("data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S"),
                      extension="png")

@@ -3,6 +3,7 @@
 from graphics.lib.color import Color
 from graphics.lib.drawing import Drawing
 
+import json
 import math
 import serial
 import sys
@@ -14,22 +15,26 @@ class Scanner():
 
     def __init__(self, serial):
         self.serial = serial
-        self.data = []
 
     @staticmethod
     def create(location):
         return Scanner(serial.Serial(location, Scanner.BAUDRATE))
 
     def read(self):
-        data = self.serial.readline().strip()
-        print "Received %s" % data
-        try:
-            self.data.append(float(data))
-        except ValueError:
-            pass
+        return self.serial.readline().strip()
 
-    def get_data(self):
-        return self.data
+    def read_until_interrupt(self):
+        data = []
+        try:
+            while True:
+                read = self.read()
+                print "Received %s" % read
+                try:
+                    data.append(float(read))
+                except ValueError:
+                    continue
+        except KeyboardInterrupt:
+            return data
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -37,19 +42,22 @@ if __name__ == "__main__":
         print "Example: python scanner.py /dev/ttyACM0"
         sys.exit(0)
     print "Reading from %s" % sys.argv[1]
+
     scanner = Scanner.create(sys.argv[1])
-    data = None
-    try:
-        while True:
-            scanner.read()
-    except KeyboardInterrupt:
-        data = scanner.get_data()
-        print "Generating image..."
+    data = scanner.read_until_interrupt()
+    print "Generating image..."
 
     width = len(data)
     height = int(max(data) * 1.5)
     drawing = Drawing(width, height)
-    for i, point in enumerate(data):
-        drawing._set_pixel(height - int(point) + 1, i, Color("#000000"))
-    drawing.generate("data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S"),
-                     extension="png")
+    for i in range(len(data) - 1):
+        drawing.draw_line(height - int(data[i]) + 1, i, 0,
+                          height - int(data[i + 1]) + 1, i + 1, 0,
+                          Color("#000000"))
+
+    filename = "data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
+    drawing.generate(filename, extension="png")
+    with open("%s.json" % filename, "w") as f:
+        f.write(json.dumps({
+            "data": data
+        }))

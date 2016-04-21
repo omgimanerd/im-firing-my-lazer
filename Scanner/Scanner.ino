@@ -26,7 +26,7 @@ void loop() {
   float valueSum = 0;
   for (int i = 0; i < NUM_POLLS; ++i) {
     valueSum += analogRead(A0);
-    delay(5);
+    delay(2);
   }
   
   Serial.println(valueSum / 10.0);

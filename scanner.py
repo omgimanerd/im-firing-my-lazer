@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from graphics.lib.color import Color
-from graphics.lib.drawing import Drawing
+from graphics.graphics.lib.color import Color
+from graphics.graphics.lib.drawing import Drawing
 
 import json
 import math
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     for i in range(len(data) - 1):
         drawing.draw_line(height - int(data[i]) + 1, i, 0,
                           height - int(data[i + 1]) + 1, i + 1, 0,
-                          Color("#000000"))
+                          Color.BLACK())
 
     filename = "data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
     drawing.generate(filename, extension="png")

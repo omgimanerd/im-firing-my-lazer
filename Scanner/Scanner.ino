@@ -18,8 +18,8 @@ void setup() {
     pinMode(i, OUTPUT);
   }
 
-  x_motor.setSpeed(60);
-  y_motor.setSpeed(60);
+  x_motor.setSpeed(30);
+  y_motor.setSpeed(30);
 }
 
 void loop() {

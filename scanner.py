@@ -56,9 +56,9 @@ if __name__ == "__main__":
                           i + 1, height - int(data[i + 1]) + 1, 0,
                           Color.BLACK())
 
-    filename = "data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
-    drawing.generate(filename, extension="png")
-    with open("%s.json" % filename, "w") as f:
+    filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
+    drawing.generate("data/png/%s" % filename, extension="png")
+    with open("data/json/%s.json" % filename, "w") as f:
         f.write(json.dumps({
             "data": data
         }))

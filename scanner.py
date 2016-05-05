@@ -52,8 +52,8 @@ if __name__ == "__main__":
     drawing = Drawing(width, height)
     print width, height
     for i in range(len(data) - 1):
-        drawing.draw_line(height - int(data[i]) + 1, i, 0,
-                          height - int(data[i + 1]) + 1, i + 1, 0,
+        drawing.draw_line(i, height - int(data[i]) + 1, 0,
+                          i + 1, height - int(data[i + 1]) + 1, 0,
                           Color.BLACK())
 
     filename = "data/%s" % time.strftime("%m-%d-%Y_%H-%M-%S")

@@ -23,18 +23,21 @@ class Scanner():
     def read(self):
         return self.serial.readline().strip()
 
-    def read_until_interrupt(self):
+    def write(self, data):
+        self.serial.write(data)
+
+    def read_laser_info(self):
         data = []
-        try:
-            while True:
-                read = self.read()
-                print "Received %s" % read
-                try:
-                    data.append(float(read))
-                except ValueError:
-                    continue
-        except KeyboardInterrupt:
-            return data
+        read = None
+        self.write("begin")
+        while read != "end":
+            read = self.read()
+            print "Received %s" % read
+            try:
+                data.append(float(read))
+            except ValueError:
+                continue
+        return data
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -44,16 +47,17 @@ if __name__ == "__main__":
     print "Reading from %s" % sys.argv[1]
 
     scanner = Scanner.create(sys.argv[1])
-    data = scanner.read_until_interrupt()
+
+    data = scanner.read_laser_info()
     print "Generating image..."
 
     width = len(data)
-    height = int(max(data) * 1.5)
+    height = int(max(data) * 2)
     drawing = Drawing(width, height)
     print width, height
     for i in range(len(data) - 1):
-        drawing.draw_line(i, height - int(data[i]) + 1, 0,
-                          i + 1, height - int(data[i + 1]) + 1, 0,
+        drawing.draw_line(i, height - int(data[i]) - 10, 0,
+                          i + 1, height - int(data[i + 1]) - 10, 0,
                           Color.BLACK())
 
     filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")

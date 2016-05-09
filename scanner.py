@@ -52,17 +52,19 @@ if __name__ == "__main__":
     print "Generating image..."
 
     width = len(data)
-    height = int(max(data) * 2)
+    height = int(max(data) * 2) + 20
     drawing = Drawing(width, height)
-    print width, height
     for i in range(len(data) - 1):
         drawing.draw_line(i, height - int(data[i]) - 10, 0,
                           i + 1, height - int(data[i + 1]) - 10, 0,
                           Color.BLACK())
-
     filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
-    drawing.generate("data/png/%s" % filename, extension="png")
-    with open("data/json/%s.json" % filename, "w") as f:
-        f.write(json.dumps({
-            "data": data
-        }))
+    drawing.display()
+
+    print "Type 'save' to save, otherwise type anything to exit"
+    if raw_input() == "save":
+        drawing.generate("data/png/%s" % filename, extension="png")
+        with open("data/json/%s.json" % filename, "w") as f:
+            f.write(json.dumps({
+                "data": data
+            }))

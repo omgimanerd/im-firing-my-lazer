@@ -23,12 +23,13 @@ void setup() {
 
   x_motor.setSpeed(30);
   y_motor.setSpeed(30);
-  Serial.println("Arduino initialized!");
 }
 
 void loop() {
   String data = Serial.readString();
+  Serial.println(data);
   if (data == "begin") {
+    Serial.println("start");
     for (int i = 0; i < Y_SCAN_STEPS; ++i) {
       valueSum = 0;
       for (int i = 0; i < NUM_POLLS; ++i) {

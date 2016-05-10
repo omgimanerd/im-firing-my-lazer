@@ -29,7 +29,9 @@ class Scanner():
     def read_laser_info(self):
         data = []
         read = None
-        self.write("begin")
+        while read != "begin":
+            self.write("begin")
+            read = self.read()
         while read != "end":
             read = self.read()
             print "Received %s" % read
@@ -48,7 +50,7 @@ if __name__ == "__main__":
 
     scanner = Scanner.create(sys.argv[1])
 
-    data = scanner.read_laser_info()
+    data = map(lambda x: x * 10, scanner.read_laser_info())
     print "Generating image..."
 
     width = len(data)

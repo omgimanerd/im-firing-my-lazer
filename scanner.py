@@ -36,7 +36,7 @@ class Scanner():
             read = self.read()
             print "Received %s" % read
             try:
-                data.append(float(read))
+                data.append(float(read) * 2)
             except ValueError:
                 continue
         return data
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     scanner = Scanner.create(sys.argv[1])
 
-    data = map(lambda x: x * 10, scanner.read_laser_info())
+    data = scanner.read_laser_info()
     print "Generating image..."
 
     width = len(data)

@@ -78,7 +78,7 @@ if __name__ == "__main__":
             color = Color([scale, scale, scale])
             drawing.draw_line(i, 0, 0, i, 99, 0, color)
 
-    filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
+    filename = "%s_%s" % (args.type, time.strftime("%m-%d-%Y_%H-%M-%S"))
     drawing.display()
     print "Type 'save' to save, otherwise type anything to exit"
     if raw_input() == "save":

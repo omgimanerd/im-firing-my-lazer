@@ -29,7 +29,6 @@ class Scanner():
 
     def read_laser_info(self):
         data = []
-        sublist = []
         read = None
         while read != "begin":
             self.write("begin")
@@ -37,14 +36,10 @@ class Scanner():
         while read != "end":
             read = self.read()
             print "Received %s" % read
-            if read == "row":
-                data.append(sublist)
-                sublist = []
-                continue
             try:
-                sublist.append(float(read) * 2)
+                data.append(float(read) * 2)
             except ValueError:
-                sublist.append(0)
+                continue
         return data
 
 if __name__ == "__main__":
@@ -57,17 +52,15 @@ if __name__ == "__main__":
     data = scanner.read_laser_info()
 
     width = len(data)
-    height = len(data[0])
+    height = int(max(data) * 2 + 50)
     drawing = Drawing(width, height)
-    flattened_data = [val for row in data for val in row]
-    low, high = min(flattened_data), max(flattened_data)
-    for x in range(width):
-        for x in range(height):
-            scale = Util.linear_scale(..., low, high, 0, 255)
-            drawing.draw_point()
-
-    filename = "%s_%s" % (args.type, time.strftime("%m-%d-%Y_%H-%M-%S"))
+    for i in range(len(data) - 1):
+        drawing.draw_line(i, height - data[i] - 10, 0,
+                          i + 1, height - data[i + 1] - 10, 0,
+                          Color.BLACK())
     drawing.display()
+
+    filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
     print "Type 'save' to save, otherwise type anything to exit"
     if raw_input() == "save":
         drawing.generate("data/png/%s" % filename, extension="png")

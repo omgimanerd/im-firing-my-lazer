@@ -60,9 +60,9 @@ if __name__ == "__main__":
                           Color.BLACK())
     drawing.display()
 
-    filename = "%s" % time.strftime("%m-%d-%Y_%H-%M-%S")
-    print "Type 'save' to save, otherwise type anything to exit"
-    if raw_input() == "save":
+    print "Type a filename to save, otherwise press enter to exit..."
+    filename = raw_input()
+    if filename != "":
         drawing.generate("data/png/%s" % filename, extension="png")
         with open("data/json/%s.json" % filename, "w") as f:
             f.write(json.dumps({

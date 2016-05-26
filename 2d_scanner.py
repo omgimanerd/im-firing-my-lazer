@@ -13,6 +13,7 @@ import time
 class Scanner():
 
     BAUDRATE = 9600
+    AMPLIFYING_FACTOR = 3
 
     def __init__(self, serial):
         self.serial = serial

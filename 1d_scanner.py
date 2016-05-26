@@ -1,26 +1,22 @@
 #!/usr/bin/python
 
-from graphics.lib.color import Color
-from graphics.lib.drawing import Drawing
-from graphics.lib.util import Util
+from lib.visualizer import Visualizer
 
 import argparse
 import json
 import serial
-import sys
-import time
 
-class Scanner():
+class Scanner_1D():
 
     BAUDRATE = 9600
-    AMPLIFYING_FACTOR = 3
+    AMPLIFYING_FACTOR = 1
 
     def __init__(self, serial):
         self.serial = serial
 
     @staticmethod
     def create(location):
-        return Scanner(serial.Serial(location, Scanner.BAUDRATE))
+        return Scanner_1D(serial.Serial(location, Scanner_1D.BAUDRATE))
 
     def read(self):
         return self.serial.readline().strip()
@@ -38,7 +34,7 @@ class Scanner():
             read = self.read()
             print "Received %s" % read
             try:
-                data.append(float(read) * Scanner.AMPLIFYING_FACTOR)
+                data.append(float(read) * Scanner_1D.AMPLIFYING_FACTOR)
             except ValueError:
                 continue
         return data
@@ -49,25 +45,18 @@ if __name__ == "__main__":
     args = argparser.parse_args()
 
     print "Generating a scanner data graph..."
-    scanner = Scanner.create(args.serial_port)
+    scanner = Scanner_1D.create(args.serial_port)
     data = scanner.read_laser_info()
 
-    # Creates a Drawing object and draws the data onto it.
-    width = len(data)
-    height = int(max(data) * 2)
-    drawing = Drawing(width, height)
-    for i in range(len(data) - 1):
-        drawing.draw_line(i, height - data[i] - 10, 0,
-                          i + 1, height - data[i + 1] - 10, 0,
-                          Color.BLACK())
+    # Show a visualization of the data
+    Visualizer.visualize_1d(data)
 
     # Display the drawing, then prompt to save
-    drawing.display()
     print "Type a filename to save, otherwise press enter to exit..."
     filename = raw_input()
     if filename != "":
-        drawing.generate("data/png/%s" % filename, extension="png")
-        with open("data/json/%s.json" % filename, "w") as f:
-            f.write(json.dumps({
-                "data": data
+        with open("data/%s.json" % filename, "w") as data_file:
+            data_file.write(json.dumps({
+                "type": "1d",
+                "values": data
             }))

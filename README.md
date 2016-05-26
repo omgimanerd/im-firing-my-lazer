@@ -22,7 +22,7 @@ Scanning speed at 60rpm = 1.57 in/s
 Theoretical resolution, 0.024 in / motor tick
 
 
-## Creators
+# Creators
   - omgimanerd (Alvin Lin)
   - sachalmalick (Sachal Malick)
   - jijiglobe (Jion Fairchild)

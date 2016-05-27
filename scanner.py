@@ -33,8 +33,10 @@ class Scanner():
         while read != "begin":
             self.write("begin")
             read = self.read()
-        while read != "end":
+        while True:
             read = self.read()
+            if read == "end":
+                break
             print "Received %s" % read
             try:
                 values.append(float(read) * 2)
@@ -56,8 +58,8 @@ if __name__ == "__main__":
 
     Visualizer.visualize(data)
 
-    filename = raw_input()
     print "Type a filename to save, otherwise press enter to exit..."
+    filename = raw_input()
     if filename != "":
         with open("data/%s.json" % filename, "w") as f:
             f.write(json.dumps(data))

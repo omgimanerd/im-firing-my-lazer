@@ -3,15 +3,16 @@ This repository contains code used in our laser scanning modern physics project
 at Stuyvesant High School
 
 # Dependencies
-To replicate this project with scanner data, this project requires pyserial
+To replicate this experiment with our Arduino setup, this project requires
+pyserial.
 ```
 sudo pip install pyserial
 ```
 
 To run the analyses on the data, this project requires numpy, scipy,
-and matplotlib.
+matplotlib, and pillow.
 ```
-sudo pip install numpy scipy matplotlib
+sudo pip install numpy scipy matplotlib pillow
 ```
 
 

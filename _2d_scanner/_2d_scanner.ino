@@ -34,27 +34,26 @@ void loop() {
   String data = Serial.readString();
   float value_sum = 0;
   if (data == "begin") {
-    Serial.println("start");
-    Serial.println("{ 'type': '2d' }");
-    sprintf(tmp, "{ 'width': '%d' }", X_SCAN_STEPS);
+    Serial.println("{ \"type\": \"2d\" }");
+    sprintf(tmp, "{ \"width\": \"%d\" }", Y_SCAN_STEPS);
     Serial.println(tmp);
-    sprintf(tmp, "{ 'height': '%d' }", Y_SCAN_STEPS);
+    sprintf(tmp, "{ \"height\": \"%d\" }", X_SCAN_STEPS);
     Serial.println(tmp);
-    for (int y = 0; y < Y_SCAN_STEPS; ++y) {
-      for (int x = 0; x < X_SCAN_STEPS; ++x) {
+    for (int x = 0; x < X_SCAN_STEPS; ++x) {
+      for (int y = 0; y < Y_SCAN_STEPS; ++y) {
         value_sum = 0;
         for (int i = 0; i < NUM_POLLS; ++i) {
           value_sum += analogRead(A0);
           delay(2);
         }
         Serial.println(value_sum / 10.0);
-        x_motor.step(X_SCAN_INTERVAL);
+        y_motor.step(Y_SCAN_INTERVAL);
       }
-      x_motor.step(-X_SCAN_INTERVAL * X_SCAN_STEPS);
-      y_motor.step(Y_SCAN_INTERVAL);
+      x_motor.step(-Y_SCAN_INTERVAL * Y_SCAN_STEPS);
+      y_motor.step(X_SCAN_INTERVAL);
     }
     Serial.println("end");
-    y_motor.step(-5 * Y_SCAN_STEPS);
+    y_motor.step(-X_SCAN_INTERVAL * X_SCAN_STEPS);
   }
 }
 

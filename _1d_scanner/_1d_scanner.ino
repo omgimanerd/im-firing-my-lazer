@@ -1,5 +1,5 @@
 /**
- * Base code for Arduino.
+ * Base code for Arduino when scanning 1 dimensionally.
  */
 
 #include <Stepper.h>
@@ -27,8 +27,7 @@ void loop() {
   float value_sum = 0;
   Serial.println(data);
   if (data == "begin") {
-    Serial.println("start");
-    Serial.println("{ 'type': '1d' }");
+    Serial.println("{ \"type\": \"1d\" }");
     for (int i = 0; i < SCAN_STEPS; ++i) {
       value_sum = 0;
       for (int j = 0; j < NUM_POLLS; ++j) {

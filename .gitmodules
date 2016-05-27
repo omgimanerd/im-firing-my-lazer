@@ -1,0 +1,4 @@
+[submodule "lib/graphics"]
+	path = lib/graphics
+	url = https://github.com/omgimanerd/graphics
+	branch = master

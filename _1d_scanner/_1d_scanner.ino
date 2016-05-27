@@ -28,6 +28,7 @@ void loop() {
   Serial.println(data);
   if (data == "begin") {
     Serial.println("start");
+    Serial.println("{ 'type': '1d' }");
     for (int i = 0; i < SCAN_STEPS; ++i) {
       value_sum = 0;
       for (int j = 0; j < NUM_POLLS; ++j) {

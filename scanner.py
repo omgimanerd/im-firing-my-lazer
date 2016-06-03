@@ -41,7 +41,10 @@ class Scanner():
             try:
                 values.append(float(read) * 2)
             except ValueError:
-                data.update(json.loads(read))
+                try:
+                    data.update(json.loads(read))
+                except:
+                    continue
         data.update({
             "values": values
         })

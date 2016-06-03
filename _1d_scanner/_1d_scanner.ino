@@ -32,7 +32,6 @@ void loop() {
       value_sum = 0;
       for (int j = 0; j < NUM_POLLS; ++j) {
         value_sum += analogRead(A0);
-        delay(2);
       }
       Serial.println(value_sum / 10.0);
       motor.step(SCAN_INTERVAL);

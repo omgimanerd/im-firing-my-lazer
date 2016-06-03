@@ -34,7 +34,6 @@ class Visualizer:
 
     @staticmethod
     def _to_pil_data(values):
-        values = [val for sublist in values for val in sublist]
         low, high = min(values), max(values)
         return map(lambda x: Visualizer._linear_scale(x, low, high, 0, 255),
                    values)
@@ -44,7 +43,8 @@ class Visualizer:
         width = data["width"]
         height = data["height"]
         image = Image.new("1", (width, height))
-        image.putdata(Visualizer._to_pil_data(data["value"]))
+        image.putdata(Visualizer._to_pil_data(data["values"]))
+        image = image.resize((width * 8, height * 8), Image.ANTIALIAS)
         image.show()
 
 if __name__ == "__main__":

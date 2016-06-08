@@ -12,10 +12,10 @@
 // won't work. We don't know what the arbitrary upper bound is and we haven't found the reason why
 // but it most likely is related to the breakout board controlling the stepper motor.
 #define SCAN_SPEED 40
-#define X_SCAN_STEPS 15
-#define X_SCAN_INTERVAL 25
-#define Y_SCAN_STEPS 125
-#define Y_SCAN_INTERVAL 50
+#define X_SCAN_STEPS 20
+#define X_SCAN_INTERVAL 50
+#define Y_SCAN_STEPS 150
+#define Y_SCAN_INTERVAL 5
 
 // The motor drifts some amount every y-iteration. This constant fights against that.
 #define DRIFT_CONSTANT -50

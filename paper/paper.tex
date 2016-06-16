@@ -1,0 +1,35 @@
+\documentclass[letterpaper, 12pt]{article}
+\usepackage{circuitikz}
+\usepackage[pdf]{pstricks}
+\usepackage{pst-optic}
+
+\title{Modern Physics Laser Scanning Project}
+\author{Alvin Lin
+  \thanks{with Jion Fairchild and Sachal Malick}}
+\date{June 2016}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+
+\begin{abstract}
+This experiment was conducted in the Modern Physics class of 2016 at Stuyvesant High School. The goal was to build a laser scanner using a laser and a photodiode and find the maximum achievable resolution the apparatus.
+\end{abstract}
+
+\section{Experimental Setup}
+In this experiment, we focused a laser onto a piece of paper containing our
+scanning sample and read the amount of reflected light using a photometer. Conveniently, the photometer outputted the a voltage linearly proportional to the amount of light it received in addition to its digital display. This allowed us to connect an Arduino microcontroller to the photometer to read and store the voltages as we passed the scanning sample beneath the laser. We 3D printed two important parts to our scanner, the slides for the x and y axes.
+\par
+In order to maximize the resolution of our image, we wanted the laser beam to be as small and as focused as possible. Before having it
+
+\begin{pspicture}[showgrid](0,-0.3)(3,2.3)
+\end{pspicture}
+
+\begin{pspicture}[showgrid](0,-0.3)(3,2.3)
+\pnodes(0,1){A}(3,1){B}
+\lens(A)(B)
+\end{pspicture}
+
+\end{document}

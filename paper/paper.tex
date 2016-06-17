@@ -1,7 +1,10 @@
 \documentclass[letterpaper, 12pt]{article}
 \usepackage{circuitikz}
+\usepackage{listings}
 \usepackage[pdf]{pstricks}
-\usepackage{pst-optic}
+\usepackage{pst-optexp}
+
+\setlength{\parskip}{1em}
 
 \title{Modern Physics Laser Scanning Project}
 \author{Alvin Lin
@@ -15,21 +18,85 @@
 \end{titlepage}
 
 \begin{abstract}
-This experiment was conducted in the Modern Physics class of 2016 at Stuyvesant High School. The goal was to build a laser scanner using a laser and a photodiode and find the maximum achievable resolution the apparatus.
+This experiment was conducted in the Modern Physics class of 2016 at Stuyvesant High School. The goal was to build a laser scanner using a laser and a photodiode and find the maximum achievable resolution of the apparatus.
 \end{abstract}
 
 \section{Experimental Setup}
-In this experiment, we focused a laser onto a piece of paper containing our
-scanning sample and read the amount of reflected light using a photometer. Conveniently, the photometer outputted the a voltage linearly proportional to the amount of light it received in addition to its digital display. This allowed us to connect an Arduino microcontroller to the photometer to read and store the voltages as we passed the scanning sample beneath the laser. We 3D printed two important parts to our scanner, the slides for the x and y axes.
 \par
-In order to maximize the resolution of our image, we wanted the laser beam to be as small and as focused as possible. Before having it
+In this experiment, we focused a laser onto a piece of paper containing our
+scanning sample and read the amount of reflected light using a photometer. The photometer displayed the amount of light it received on a digital display but also conveniently had two banana jacks that outputted a voltage linearly proportional to the amount of light it received. This allowed us to connect an Arduino microcontroller to the photometer to read and store the voltages as we passed the scanning sample beneath the laser. We 3D printed two important parts to our scanner, the slides for the x and y axes.
+\par
+In order to maximize the resolution of our image, we wanted the laser beam to be as small and as focused as possible. We spaced three concave lenses in front of the laser to expand the beam, collimate it, and focus it to a point. The scanning sample would be placed at the end of the focused beam. If the laser was focused on a darker point on the sample, it would reflect less light. Conversely, if the laser was focused on a lighter point, it would reflect more light.
 
-\begin{pspicture}[showgrid](0,-0.3)(3,2.3)
+\begin{pspicture}[](0,0)(14,4)
+  \pnodes(2,2){A}(12,2){B}
+  \pnodes(10.5,1.5){D}(10.7,2){E}(10.9,2.5){F}
+  \begin{optexp}
+    \optbox[position=start](A)(B){laser}
+    \lens[lensradius=0.75,abspos=1,labeloffset=-1](A)(B){expands beam}
+    \lens[lensradius=2.3,abspos=4](A)(B){collimates beam}
+    \lens[lensradius=0.75,abspos=8](A)(B){focuses beam}
+    \mirror[labeloffset=-0.7](D)(E)(F){sample}
+    \drawwidebeam[beamwidth=0.2,linecolor=red]{-}(B)
+  \end{optexp}
 \end{pspicture}
 
-\begin{pspicture}[showgrid](0,-0.3)(3,2.3)
-\pnodes(0,1){A}(3,1){B}
-\lens(A)(B)
-\end{pspicture}
+\par
+We built our own 2D slide mechanism to shift the scanning sample back and forth under the laser. We used an Arduino to read the voltage output from the photometer and simultaneously control two stepper motors which would shift the sample back and forth.
+
+\begin{circuitikz}
+  \draw
+  (0,0) to [battery](3,0)
+  to [european resistor](6,0)
+  to [american resistor](7,3)
+  to [short](4,1)
+  to [short](4,0);
+\end{circuitikz}
+
+\begin{lstlisting}[language=C,showstringspaces=false]
+  /**
+   * Base code for Arduino when scanning 1 dimensionally.
+   */
+
+  #include <Stepper.h>
+
+  // Globals
+  #define BAUDRATE 9600
+  #define NUM_POLLS 10
+
+  #define SCAN_SPEED 60
+  #define SCAN_STEPS 700
+  #define SCAN_INTERVAL 1
+
+  Stepper motor(512, 8, 10, 9, 11);
+
+  void setup() {
+    Serial.begin(BAUDRATE);
+    for (int i = 8; i < 12; ++i) {
+      pinMode(i, OUTPUT);
+    }
+    motor.setSpeed(SCAN_SPEED);
+  }
+
+  void loop() {
+    String data = Serial.readString();
+    float value_sum = 0;
+    Serial.println(data);
+    if (data == "begin") {
+      Serial.println("{ \"type\": \"1d\" }");
+      for (int i = 0; i < SCAN_STEPS; ++i) {
+        value_sum = 0;
+        for (int j = 0; j < NUM_POLLS; ++j) {
+          value_sum += analogRead(A0);
+        }
+        Serial.println(value_sum / 10.0);
+        motor.step(SCAN_INTERVAL);
+      }
+      Serial.println("end");
+      motor.step(-SCAN_INTERVAL * SCAN_STEPS);
+    }
+  }
+\end{lstlisting}
+
 
 \end{document}

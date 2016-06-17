@@ -3,8 +3,12 @@
 \usepackage{graphicx}
 \graphicspath{ {pictures/} }
 \usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
 \usepackage[pdf]{pstricks}
 \usepackage{pst-optexp}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=cyan}
 
 \setlength{\parskip}{1em}
 
@@ -26,9 +30,9 @@ This experiment was conducted in the Modern Physics class of 2016 at Stuyvesant 
 \section{Experimental Setup}
 \par
 In this experiment, we focused a laser onto a piece of paper containing our
-scanning sample and read the amount of reflected light using a photometer. The photometer displayed the amount of light it received on a digital display but also conveniently had two banana jacks that outputted a voltage linearly proportional to the amount of light it received. This allowed us to connect an Arduino microcontroller to the photometer to read and store the voltages as we passed the scanning sample beneath the laser. We 3D printed two important parts to our scanner, the slides for the x and y axes.
+scanning sample and read the amount of reflected light using a photometer. The photometer displayed the amount of light it received on a digital display but also conveniently had two banana jacks that outputted a voltage proportional to the amount of light it received. This allowed us to connect an Arduino microcontroller to the photometer to read and store the voltages as we passed the scanning sample beneath the laser. We 3D printed two important parts to our scanner, the slides for the x and y axes.
 \par
-In order to maximize the resolution of our image, we wanted the laser beam to be as small and as focused as possible. We spaced three concave lenses in front of the laser to expand the beam, collimate it, and focus it to a point. The scanning sample would be placed at the end of the focused beam. If the laser was focused on a darker point on the sample, it would reflect less light. Conversely, if the laser was focused on a lighter point, it would reflect more light.
+In order to maximize the resolution of our image, we wanted the laser beam to be as small and as focused as possible. We spaced three concave lenses in front of the laser to expand the beam, collimate it, and focus it to a point. The scanning sample would be placed at the end of the focused beam. If the laser was focused on a darker point on the sample, it would reflect less light and the photometer would read a lower voltage. Conversely, if the laser was focused on a lighter point, it would reflect more light and the photometer would read a higher voltage.
 
 \begin{pspicture}[](0,0)(14,4)
   \pnodes(2,2){A}(12,2){B}
@@ -55,18 +59,22 @@ We built our own 2D slide mechanism to shift the scanning sample back and forth 
 \begin{figure}[H]
   \centering
   \includegraphics[width=6cm,height=10cm]{setup}
-  \caption[caption]{3D printed components, CADs available here:\hspace{\textwidth}https://www.github.com/omgimanerd/im-firing-my-lazer}
+  \caption[caption]{3D printed components\footnotemark}
 \end{figure}
+\footnotetext{CADs of these components are available here:
+  \url{https://www.github.com/omgimanerd/im-firing-my-lazer}}
 
 \section{Experimental Procedure}
 \par
-We set up various resolution test targets beneath our scanner and ran our scanner over each target. Based on the stepper motors and driver boards we were using\footnotemark, we approximated what the resolution of our setup would be.
-\footnotetext{We were using the USPRO 5V 4-phase 5-wire stepper motors with the ULN2003 driver board for Arduino}
-Due to the driver board's microstepping, each revolution of the motor took 2048 steps. With a 0.5 inch diameter drive axle moving the sample, this means that 1 step equated to \( 7.6699 \times 10^{-4} \) inches. Converting this to \( \frac{lines}{mm}\):
+We set up various resolution test targets beneath our scanner and ran our scanner over each target. Based on the stepper motors\footnotemark
+\footnotetext{USPRO 5V 4-phase 5-wire stepper motors}
+and driver boards\footnotemark
+\footnotetext{ULN2003 driver board for Arduino}
+we were using, we approximated what the resolution of our setup would be. Due to the driver board's microstepping, each revolution of the motor took 2048 steps. With a 0.5 inch diameter drive axle moving the sample, this means that 1 step equated to $7.6699\times10^{-4}$ inches. Converting this to $ \frac{lines}{mm}$:
 
-\[ 7.6699\times10^{-4}in = 1.9557746\times10^{-2}mm \]
-\[ \frac{1\ line}{1.9557746\times10^{-2}mm} = 51.13\frac{lines}{mm}\]
-\[ 51.13\frac{lines}{mm} \div 2 \approx 25\frac{lines}{mm} \]
+$$ 7.6699\times10^{-4}in = 1.9557746\times10^{-2}mm $$
+$$ \frac{1\ line}{1.9557746\times10^{-2}mm} = 51.13\frac{lines}{mm} $$
+$$ 51.13\frac{lines}{mm} \div 2 \approx 25\frac{lines}{mm} $$
 
 \par
 This number is only true, however, if our laser beam is an infinitesimally small point. Since this is not the case, our actual resolution is much lower.
@@ -74,7 +82,148 @@ This number is only true, however, if our laser beam is an infinitesimally small
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm,height=6cm]{resolution_test}
-  \caption[caption]{Resolution Test Targets (not to scale)}
+  \caption[caption]{Example Resolution Test Targets (not to scale)}
 \end{figure}
+
+\section{Experimental Results}
+\par
+Running the laser scanner over the actual resolution test targets above gave us a much clearer indicator of whether or not our scanner was actually able to resolve up to 25 $\frac{lines}{mm}$. We ran the laser directly over the four lines in each resolution test target while reading in the values, starting with the lowest resolution.
+
+\pgfplotstableread{scan_1.6.txt}
+  \dataone
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \dataone;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 1.6 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\par
+In figure 4, four discrete dips in the relative intensity read by the Arduino are visible as the laser passes over the 1.6 $\frac{lines}{mm}$ resolution test target. Each dip is distinguishable and corresponds to a line on the resolution test target. As long as each dip in the relative intensity is discrete for that test, we will consider it a resolvable resolution.
+
+\pgfplotstableread{scan_1.8.txt}
+  \datatwo
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datatwo;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 1.8 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_2.0.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 2.0 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_2.2.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 2.2 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_2.5.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 2.5 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_2.8.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 2.8 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_3.2.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 3.2 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\pgfplotstableread{scan_4.0.txt}
+  \datathree
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$time$},
+      ylabel={$relative\ intensity$},
+      xticklabels={,,},
+      yticklabels={,,}]
+      \addplot[mark=none] table from \datathree;
+    \end{axis}
+  \end{tikzpicture}
+  \caption[caption]{Scan of 4.0 {$\frac{lines}{mm}$} resolution test target}
+\end{figure}
+
+\section{Analysis}
+\par
+Figures 5 to 11 show our scan data as we increase the resolution of our test target. As we increase the resolution of the test target, the variance in relative intensity between the lines and the space between them becomes muddled. It is possible to see five discrete dips only up to 3.2 $\frac{lines}{mm}$. At 4.0 $\frac{lines}{mm}$, it is no longer possible to discern five discrete dips in the relative intensity detected. Our testable scanner resolution limit, therefore, is 3.2 $\frac{lines}{mm}$.
+\par
+Likely, we could improve our resolution by focusing the laser to a smaller point. Due to human error, our lenses were likely not optimally aligned and we did not focus the laser to a small enough point. Additionally, we could improve the scanner by reducing the radius of the axle pulling the sample across the laser, which would reduce the step distance per step.
 
 \end{document}

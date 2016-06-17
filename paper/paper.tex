@@ -58,49 +58,17 @@ We built our own 2D slide mechanism to shift the scanning sample back and forth 
 \end{figure}
 
 \section{Experimental Procedure}
+\par
+We set up various resolution test targets beneath our scanner and ran our scanner over each target. Based on the stepper motors and driver boards we were using\footnotemark, we approximated what the resolution of our setup would be.
+\footnotetext{We were using the USPRO 5V 4-phase 5-wire stepper motors with the ULN2003 driver board for Arduino}
+Due to the driver board's microstepping, each revolution of the motor took 2048 steps. With a 0.5 inch diameter drive axle moving the sample, this means that 1 step equated to \( 7.6699 \times 10^{-4} \) inches. Converting this to \( \frac{lines}{mm}\):
 
+\[ 7.6699\times10^{-4}in = 1.9557746\times10^{-2}mm \]
+\[ \frac{1\ line}{1.9557746\times10^{-2}mm} = 51.13\frac{lines}{mm}\]
+\[ 51.13\frac{lines}{mm} \div 2 \approx 25\frac{lines}{mm} \]
 
-\begin{lstlisting}[language=C,showstringspaces=false]
-
-  #include <Stepper.h>
-
-  // Globals
-  #define BAUDRATE 9600
-  #define NUM_POLLS 10
-
-  #define SCAN_SPEED 60
-  #define SCAN_STEPS 700
-  #define SCAN_INTERVAL 1
-
-  Stepper motor(512, 8, 10, 9, 11);
-
-  void setup() {
-    Serial.begin(BAUDRATE);
-    for (int i = 8; i < 12; ++i) {
-      pinMode(i, OUTPUT);
-    }
-    motor.setSpeed(SCAN_SPEED);
-  }
-
-  void loop() {
-    String data = Serial.readString();
-    float value_sum = 0;
-    Serial.println(data);
-    if (data == "begin") {
-      Serial.println("{ \"type\": \"1d\" }");
-      for (int i = 0; i < SCAN_STEPS; ++i) {
-        value_sum = 0;
-        for (int j = 0; j < NUM_POLLS; ++j) {
-          value_sum += analogRead(A0);
-        }
-        Serial.println(value_sum / 10.0);
-        motor.step(SCAN_INTERVAL);
-      }
-      Serial.println("end");
-      motor.step(-SCAN_INTERVAL * SCAN_STEPS);
-    }
-  }
-\end{lstlisting}
+\par
+This number is only true, however, if our laser beam is an infinitesimally small point. Since this is not the case, our actual resolution is much lower.
 
 
 \end{document}

@@ -1,30 +1,23 @@
 # im-firing-my-lazer
-This repository contains code used in our laser scanning modern physics project
-at Stuyvesant High School
+This repository contains code used in our Modern Physics Laser Scanning Project
+conducted in 2016 at Stuyvesant High School.
 
 # Dependencies
 To replicate this experiment with our Arduino setup, this project requires
 pyserial.
 ```
-sudo pip install pyserial
+pip install pyserial
 ```
 
-To run the analyses on the data, this project requires numpy, scipy,
-matplotlib, and pillow.
+To run the analyses on the data or to view the data, you need numpy, matplotlib, and pillow.
 ```
-sudo pip install numpy scipy matplotlib pillow
+pip install numpy matplotlib pillow
 ```
 
+# Experiment explanation and results
+Please reference this [paper](https://github.com/omgimanerd/im-firing-my-lazer/blob/master/paper/paper.pdf)
 
-Resolutions are measured in lines per mm.
-
-Scanning speed at 60rpm = 1.57 in/s
-
-Theoretical resolution, 0.024 in / motor tick
-
-jamalhafiez@yahoo.com
-
-# Creators
+# Creators/Authors
   - omgimanerd (Alvin Lin)
   - sachalmalick (Sachal Malick)
   - jijiglobe (Jion Fairchild)

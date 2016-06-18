@@ -1,6 +1,8 @@
-*.pyc
-*.log
 *.aux
-*.zip
+*.bcf
+*.log
 *.out
+*.pyc
+*.xml
+*.zip
 *pics.pdf

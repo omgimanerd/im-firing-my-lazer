@@ -50,36 +50,38 @@ In order to maximize the resolution of our image, we wanted the laser beam to be
 \end{pspicture}
 
 \par
-The Arduino that we used to read in the voltage values from the photometer was also used to simultaneously control the stepper motors moving the sample. For one dimensional scans, we only moved one motor and scanned a single line across the target. For two dimensional scans, we oscillated the motor in one direction while shifting it slowly perpendicular to its direction of oscillation.
+The Arduino that we used to read in the voltage values from the photometer was also used to simultaneously control the stepper motors moving the sample. For one dimensional scans, we scanned across the sample once and graphed the relative intensities as the laser passed over the sample. For two dimensional scans, we oscillated the sample in one direction while shifting it perpendicular to its direction of oscillation and mapped the relative intensies onto a 2D grid.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=10cm,height=6cm]{setup_diagram}
+  \includegraphics[width=12cm,height=8cm]{setup_diagram}
   \caption{Diagram of Components}
 \end{figure}
 
+\newpage
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6cm,height=7cm]{setup_picture}
+  \includegraphics[width=10cm,height=6cm]{setup_picture}
   \caption[caption]{3D printed components\footnotemark}
 \end{figure}
-\footnotetext{CADs available here\cite{github}:
-  \url{https://www.github.com/omgimanerd/im-firing-my-lazer}}
+\footnotetext{CADs available here:\cite{github}}
 
 \section{Experimental Procedure}
 \par
 We set up various resolution test targets beneath our scanner and ran our scanner over each target. Based on the stepper motors\footnotemark
-\footnotetext{USPRO 28BYJ 5V 4-phase 5-wire stepper motors\cite{amazon}}
+\footnotetext{USPRO 28BYJ 5V 4-phase 5-wire stepper motors \cite{amazon}}
 and driver boards\footnotemark
-\footnotetext{ULN2003 driver board for Arduino\cite{amazon}}
+\footnotetext{ULN2003 driver board for Arduino \cite{amazon}}
 we were using, we approximated what the resolution of our setup would be. Due to the driver board's microstepping, each revolution of the motor took 512 steps. With a 0.5 inch diameter drive axle moving the sample, this means that 1 step of the motor would shift the sample $3.067962\times10^{-3}$ inches. Converting this to $\frac{lines}{mm}$:
 
-$$ 3.067962\times10^{-3}in = 1.9557746\times10^{-2}mm $$
-$$ \frac{1\ line}{1.9557746\times10^{-2}mm} = 51.13\frac{lines}{mm} $$
-$$ 51.13\frac{lines}{mm} \div 2 \approx 25\frac{lines}{mm} $$
+$$ 3.067962\times10^{-3}in = 7.79262348\times10^{-2}mm $$
+$$ \frac{1\ line}{7.79262348\times10^{-2}mm} \approx 12.83\frac{lines}{mm} $$
 
 \par
-This number is only true, however, if our laser beam is an infinitesimally small point. Since this is not the case, our actual resolution is much lower.
+This number only holds true if our laser beam is an infinitesimally small point. Since this is not the case, our actual resolution is much lower.
+
+\section{Experimental Results for 1 Dimensional Scans}
 
 \begin{figure}[H]
   \centering
@@ -87,9 +89,8 @@ This number is only true, however, if our laser beam is an infinitesimally small
   \caption[caption]{Example Resolution Test Targets (not to scale)\cite{test_chart}}
 \end{figure}
 
-\section{Experimental Results for 1 Dimensional Scans}
 \par
-Running the laser scanner over the actual resolution test targets above gave us a much clearer indicator of whether or not our scanner was actually able to resolve up to 25 $\frac{lines}{mm}$. We ran the laser directly over the four lines in each resolution test target while reading in the values, starting with the lowest resolution.
+Running the laser scanner over the actual resolution test targets above gave us a much clearer indicator of whether or not our scanner was actually able to resolve up to 12.83 $\frac{lines}{mm}$. We ran the laser directly over the five lines in each resolution test target while reading in the values, starting with the lowest resolution.
 
 \pgfplotstableread{scan_1.6.txt}
   \dataone
@@ -108,7 +109,7 @@ Running the laser scanner over the actual resolution test targets above gave us 
 \end{figure}
 
 \par
-In figure 4, four discrete dips in the relative intensity read by the Arduino are visible as the laser passes over the 1.6 $\frac{lines}{mm}$ resolution test target. Each dip is distinguishable and corresponds to a line on the resolution test target. As long as each dip in the relative intensity is discrete for that test, we will consider it a resolvable resolution.
+In figure 4, five discrete dips in the relative intensity read by the Arduino are visible as the laser passes over the 1.6 $\frac{lines}{mm}$ resolution test target. Each dip is distinguishable and corresponds to a line on the resolution test target. As long as each dip in the relative intensity is discrete for that test, we will consider it a resolvable resolution.
 
 \pgfplotstableread{scan_1.8.txt}
   \datatwo
@@ -224,13 +225,13 @@ In figure 4, four discrete dips in the relative intensity read by the Arduino ar
 
 \section{Analysis}
 \par
-Figures 5 to 11 show our scan data as we increase the resolution of our test target. As we increase the resolution of the test target, the variance in relative intensity between the lines and the space between them becomes muddled. It is possible to see five discrete dips only up to 3.2 $\frac{lines}{mm}$. At 4.0 $\frac{lines}{mm}$, it is no longer possible to discern five discrete dips in the relative intensity detected. Our testable scanner resolution limit, therefore, is 3.2 $\frac{lines}{mm}$.
+Figures 5 to 11 show our scan data as we increase the resolution of our test target. As the resolution increases, the variance in relative intensity between the lines and the space between them becomes muddled. It is possible to see five discrete dips only up to 3.2 $\frac{lines}{mm}$. At 4.0 $\frac{lines}{mm}$, it is no longer possible to discern five discrete dips in the relative intensity detected. Our testable scanner resolution limit, therefore, is 3.2 $\frac{lines}{mm}$.
 \par
 We could likely improve our resolution by focusing the laser to a smaller point. Due to human error, our lenses were probably not optimally aligned and we did not focus the laser to a small enough point. Additionally, we could improve the scanner by reducing the radius of the axle pulling the sample across the laser, which would reduce the step distance and increase the precision.
 
 \section{Experimental Results for 2 Dimensional Scans}
 \par
-For two dimensional scans, instead of running the sample in one direction under the laser, we oscillated it back and forth in the $y$ direction while slowing shifting it in the $x$ direction. This allowed us to produce a two-dimensional image of the lines on the resolution test target.
+For two dimensional scans, instead of running the sample in one direction under the laser, we oscillated it back and forth in the $x$ direction while shifting it in the $y$ direction. This allowed us to produce a two-dimensional image of the lines on the resolution test target by mapping the values onto a 2D grid.
 
 \begin{figure}[H]
   \centering
@@ -239,7 +240,7 @@ For two dimensional scans, instead of running the sample in one direction under 
 \end{figure}
 
 \par
-For demonstration purposes, we used a lower resolution test target so that we could produce a discernible image. We scaled the voltage received by the Arduino to a greyscale value and plotted it based on the motor's position to create the image. However, the motor would slightly drift after each oscillation, creating the slant in the line visible in the scan above.
+For demonstration purposes, we used a lower resolution test target so that we could produce a discernible image. We scaled the voltage received by the Arduino to a greyscale value and plotted it based on the motor's position to create the image. However, the motor would slightly drift after each oscillation, creating the slanted lines visible in the scan above.
 
 \begin{figure}[H]
   \centering
@@ -248,7 +249,7 @@ For demonstration purposes, we used a lower resolution test target so that we co
 \end{figure}
 
 \par
-We were able to reduce some of the slanting by manually accounting for the drift in the motors. Some noise is visible in both of the scans due to the flexing of test target since it was printed on standard printer paper.
+We were able to reduce some of the slanting by manually accounting for the drift in the motors. Some noise is visible in both of the scans due to the flexing of test target during scanning since it was printed on standard printer paper.
 
 \newpage
 

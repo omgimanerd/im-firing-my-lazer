@@ -1,5 +1,6 @@
 *.aux
 *.bcf
+*.dvi
 *.log
 *.out
 *.pyc
